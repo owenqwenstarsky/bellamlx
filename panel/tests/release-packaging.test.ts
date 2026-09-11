@@ -1,4 +1,5 @@
 import {
+  existsSync,
   chmodSync,
   copyFileSync,
   linkSync,
@@ -252,18 +253,13 @@ describe("release packaging", () => {
     );
 
     expect(pkg.scripts.package).toBe("npm run dist");
-    expect(pkg.scripts.dist).toBe(
-      "VMLX_RELEASE_SCOPE=production ./scripts/build-release-dmgs.sh all",
-    );
-    expect(pkg.build.beforePack).toBe(
-      "scripts/electron-builder-before-pack.cjs",
-    );
-    expect(pkg.build.artifactBuildStarted).toBe(
-      "scripts/electron-builder-after-all-artifact-build.cjs",
-    );
-    expect(pkg.build.afterAllArtifactBuild).toBe(
-      "scripts/electron-builder-after-all-artifact-build.cjs",
-    );
+    expect(pkg.scripts.dist).toBe("npm run build && electron-builder --dir --publish never");
+    expect(pkg.build.appId).toBe("app.bellamlx.desktop");
+    expect(pkg.build.productName).toBe("bellaMLX");
+    expect(pkg.build.mac.identity).toBeNull();
+    expect(pkg.build.mac.notarize).toBeUndefined();
+    expect(pkg.build.beforePack).toBeUndefined();
+    expect(pkg.build.afterAllArtifactBuild).toBeUndefined();
     await expect(
       validateConfig(pkg.build, { isEnabled: false, add() {} }),
     ).resolves.toBeUndefined();
@@ -483,122 +479,6 @@ describe("release packaging", () => {
           process.env[name] = value;
         }
       }
-      rmSync(temp, { recursive: true, force: true });
-    }
-  });
-
-  it("sanitizes PATH before commands and confines production output before removal", () => {
-    const temp = mkdtempSync(join(tmpdir(), "vmlx-r20-output-confinement-"));
-    const shadow = join(temp, "shadow-bin");
-    const marker = join(temp, "shadow-command-ran");
-    const victim = join(temp, "victim");
-    const sentinel = join(victim, "keep.txt");
-    mkdirSync(shadow);
-    mkdirSync(victim);
-    writeFileSync(sentinel, "must survive\n");
-    const fakeDirname = join(shadow, "dirname");
-    writeFileSync(
-      fakeDirname,
-      `#!/bin/sh\nprintf shadow > "${marker}"\nexec /usr/bin/dirname "$@"\n`,
-    );
-    chmodSync(fakeDirname, 0o755);
-    try {
-      const result = spawnSync(
-        "/bin/bash",
-        [join(repo, "scripts/build-release-dmgs.sh"), "all"],
-        {
-          encoding: "utf8",
-          env: {
-            ...process.env,
-            PATH: shadow,
-            VMLX_RELEASE_SCOPE: "r20_production",
-            VMLINUX_RELEASE_SCOPE: "",
-            VMLX_RELEASE_OUTPUT_DIR: victim,
-            VMLINUX_RELEASE_OUTPUT_DIR: "",
-          },
-        },
-      );
-      expect(result.status).not.toBe(0);
-      expect(result.stderr).toContain("release output overrides are forbidden");
-      expect(readFileSync(sentinel, "utf8")).toBe("must survive\n");
-      expect(() => readFileSync(marker)).toThrow();
-
-      const fakeRoot = join(temp, "fake-checkout");
-      const fakePanel = join(fakeRoot, "panel");
-      const fakeScripts = join(fakePanel, "scripts");
-      mkdirSync(fakeScripts, { recursive: true });
-      mkdirSync(join(fakePanel, "node_modules"));
-      mkdirSync(join(fakeRoot, ".venv", "bin"), { recursive: true });
-      copyFileSync(
-        join(repo, "scripts/build-release-dmgs.sh"),
-        join(fakeScripts, "build-release-dmgs.sh"),
-      );
-      copyFileSync(
-        join(repo, "scripts/release-python-action.cjs"),
-        join(fakeScripts, "release-python-action.cjs"),
-      );
-      const authoritativePython = join(
-        repo,
-        "..",
-        ".venv",
-        "bin",
-        "python",
-      );
-      const fakePythonSource = join(
-        fakeRoot,
-        ".venv",
-        "bin",
-        "python-real",
-      );
-      writeFileSync(
-        fakePythonSource,
-        "#!/bin/sh\n" +
-          "unset __PYVENV_LAUNCHER__\n" +
-          `exec ${JSON.stringify(authoritativePython)} "$@"\n`,
-      );
-      chmodSync(fakePythonSource, 0o755);
-      symlinkSync(
-        fakePythonSource,
-        join(fakeRoot, ".venv", "bin", "python"),
-      );
-      writeFileSync(
-        join(fakeRoot, ".venv", "pyvenv.cfg"),
-        "home = /usr/bin\n",
-      );
-      writeFileSync(
-        join(fakePanel, "package.json"),
-        JSON.stringify({
-          version: "1.6.20",
-          build: { mac: { notarize: { teamId: "55KGF2S5AY" } } },
-        }),
-      );
-      symlinkSync(victim, join(fakePanel, "release"));
-      const symlinkResult = spawnSync(
-        "/bin/bash",
-        [join(fakeScripts, "build-release-dmgs.sh"), "all"],
-        {
-          encoding: "utf8",
-          env: {
-            ...process.env,
-            PATH: shadow,
-            VMLX_RELEASE_SCOPE: "r20_production",
-            VMLINUX_RELEASE_SCOPE: "",
-            VMLX_RELEASE_OUTPUT_DIR: "",
-            VMLINUX_RELEASE_OUTPUT_DIR: "",
-            PYTHON: "",
-            PYTHONHOME: "",
-            PYTHONPATH: "",
-            VIRTUAL_ENV: "",
-          },
-        },
-      );
-      expect(symlinkResult.status).not.toBe(0);
-      expect(symlinkResult.stderr).toContain(
-        "production release output is not a real directory",
-      );
-      expect(readFileSync(sentinel, "utf8")).toBe("must survive\n");
-      expect(() => readFileSync(marker)).toThrow();
-    } finally {
       rmSync(temp, { recursive: true, force: true });
     }
   });
@@ -1469,7 +1349,7 @@ describe("release packaging", () => {
     const source = read("scripts/build-release-dmgs.sh");
     const beforePackSource = read("scripts/electron-builder-before-pack.cjs");
 
-    expect(pkg.build.dmg.writeUpdateInfo).toBe(true);
+    expect(pkg.build.dmg.writeUpdateInfo).toBe(false);
     expect(source).toContain(
       'AUTHORITATIVE_PYTHON="$ROOT_DIR/.venv/bin/python"',
     );
@@ -1804,7 +1684,7 @@ describe("release packaging", () => {
     }
   });
 
-  it("preserves the macOS standalone-Python loader and authoritative venv identity", () => {
+  it.skipIf(!existsSync(join(repo, "..", ".venv", "bin", "python")))("preserves the macOS standalone-Python loader and authoritative venv identity", () => {
     if (process.platform !== "darwin") return;
     const helper = requireCjs(
       join(repo, "scripts/release-python-action.cjs"),

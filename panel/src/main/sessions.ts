@@ -2412,7 +2412,7 @@ export class SessionManager extends EventEmitter {
           bundleRepairNotice: isNotice,
         })
         if (!isNotice) this.emitLoadProgress({
-          sessionId, ...message, progress: 0, indeterminate: true, phase: 'bundle_repair',
+          sessionId, ...message, labelKey: message.labelKey, progress: 0, indeterminate: true, phase: 'bundle_repair',
         })
       })
       const report = await runModelBundleIntegrityPreflight(

@@ -1,5 +1,16 @@
 {
-  "console": {"chatImages":"チャットと画像","serversApi":"サーバーとAPI","models":"モデル","libraryTools":"ライブラリとツール","findDownload":"検索とダウンロード","sections":"ページ内のセクション","pages":"メインページ","preferences":"環境設定","oneModelLoaded":"読み込むモデルを1つだけにする","chatDefaults":"検出された既定の設定でモデルを起動します。詳細設定は「サーバーとAPI」で変更できます。"},
+  "console": {
+    "chatImages": "チャットと画像",
+    "serversApi": "サーバーとAPI",
+    "models": "モデル",
+    "libraryTools": "ライブラリとツール",
+    "findDownload": "検索とダウンロード",
+    "sections": "ページ内のセクション",
+    "pages": "メインページ",
+    "preferences": "環境設定",
+    "oneModelLoaded": "読み込むモデルを1つだけにする",
+    "chatDefaults": "検出された既定の設定でモデルを起動します。詳細設定は「サーバーとAPI」で変更できます。"
+  },
   "ssdPool": {
     "capacity": "SSDキャッシュが有効な共有上限に達しました: {used} / {cap}。古い再利用可能な項目が自動削除される場合があります。",
     "evicted": "SSDキャッシュが上限に達し、古い項目が自動削除されました。現在の使用量: {used} / {cap}。",
@@ -45,7 +56,7 @@
     "dismiss": "閉じる",
     "language": "言語",
     "or": "または",
-    "dsv4TopPAdvisory": "DeepSeek V4 Flash では Top P 0.95 を使用してください。他の値ではループのリスクが高まる可能性があります。vMLX は警告のみを表示し、この設定を自動的に変更しません。",
+    "dsv4TopPAdvisory": "DeepSeek V4 Flash では Top P 0.95 を使用してください。他の値ではループのリスクが高まる可能性があります。bellaMLX は警告のみを表示し、この設定を自動的に変更しません。",
     "theme": {
       "dark": "ダークテーマ",
       "light": "ライトテーマ",
@@ -66,9 +77,9 @@
   },
   "setup": {
     "initializing": "推論エンジンを初期化中...",
-    "welcome": "vMLX へようこそ",
-    "firstTimeAuto": "初回セットアップ: vMLX は推論レイヤーをインストールする必要があります。下のボタンをクリックして自動インストールしてください。",
-    "firstTimeManual": "初回セットアップ: vMLX は推論レイヤーをインストールする必要があります。続行するには手動でインストールしてください。",
+    "welcome": "bellaMLX へようこそ",
+    "firstTimeAuto": "初回セットアップ: bellaMLX は推論レイヤーをインストールする必要があります。下のボタンをクリックして自動インストールしてください。",
+    "firstTimeManual": "初回セットアップ: bellaMLX は推論レイヤーをインストールする必要があります。続行するには手動でインストールしてください。",
     "installSuccess": "推論エンジンが正常にインストールされました！",
     "installFailed": "インストールに失敗しました",
     "installCancelled": "インストールをキャンセルしました。",
@@ -77,7 +88,7 @@
     "cancel": "キャンセル",
     "noInstallers": "互換性のあるパッケージマネージャー（Python 3.10+ の uv または pip）が見つかりません。手動でインストール:",
     "installUvComment": "# まず uv をインストール（推奨）:",
-    "restartHint": "その後 vMLX を再起動してください — 自動的にセットアップが完了します。"
+    "restartHint": "その後 bellaMLX を再起動してください — 自動的にセットアップが完了します。"
   },
   "api": {
     "title": "API リファレンス",
@@ -209,7 +220,7 @@
     "showModelEndpoint": "モデルの詳細を表示",
     "ollamaEmbeddingsEndpoint": "埋め込みを生成",
     "ollamaEmbedAliasEndpoint": "埋め込みを生成（エイリアス）",
-    "livenessCheckEndpoint": "死活チェック — \"vMLX Gateway is running\" を返します"
+    "livenessCheckEndpoint": "死活チェック — \"bellaMLX Gateway is running\" を返します"
   },
   "snippets": {
     "quickStart": "クイックスタート"
@@ -233,7 +244,7 @@
       "hide": "サイドバーを隠す"
     },
     "about": {
-      "title": "MLX Studio について",
+      "title": "bellaMLX",
       "desc": "Apple Silicon 向けローカル AI 推論",
       "creator": "Jinho Jang が作成",
       "language": "言語",
@@ -252,7 +263,9 @@
       "hfRequired": "制限付きモデル（Flux、Llama など）のダウンロードに必要です。",
       "getToken": "トークンを取得",
       "savedTokenPlaceholder": "保存済みトークンが設定されています（新しいトークンで置換）"
-    }
+    },
+    "desktopTitle": "bellaMLX / Console",
+    "desktopName": "bellaMLX"
   },
   "titlebar": {
     "showSidebar": "サイドバーを表示",
@@ -425,7 +438,7 @@
       "thinkingAuto": "自動",
       "thinkingOn": "オン",
       "thinkingOff": "オフ",
-      "thinkingHelp": "自動: ローカル vMLX はモデル/ランタイムの既定の推論設定を使います。オン: 思考を要求。オフ: 直接回答を要求。",
+      "thinkingHelp": "自動: ローカル bellaMLX はモデル/ランタイムの既定の推論設定を使います。オン: 思考を要求。オフ: 直接回答を要求。",
       "thinkingNativeOnlyHelp": "このモデルはネイティブ推論のみ対応しています。自動はモデルの既定値を使用し、オンは推論を要求します。思考オフは利用できません。",
       "thinkingNotConfigurable": "このモデルのテンプレートは思考トグルを読み取りません。推論の深さは下の「推論の強度」で設定します。",
       "reasoningEffort": "推論の度合い",
@@ -697,7 +710,7 @@
       "diskCachePathPlaceholder": "~/.cache/vmlx-engine/prompt-cache",
       "powerManagement": "電源管理",
       "performanceGeneration": "パフォーマンスと生成",
-      "lagunaXsTopKWarning": "Laguna XS 2.1 ではバンドルに Top K 20 の宣言が必要ですが、このモデルのメタデータは 20 に解決されません。generation_config.json または jang_config.json を更新してください。vMLX がサンプリングを自動的に上書きすることはありません。",
+      "lagunaXsTopKWarning": "Laguna XS 2.1 ではバンドルに Top K 20 の宣言が必要ですが、このモデルのメタデータは 20 に解決されません。generation_config.json または jang_config.json を更新してください。bellaMLX がサンプリングを自動的に上書きすることはありません。",
       "toolIntegrationMCP": "ツール連携 (MCP)",
       "mcpConfigPlaceholder": "/path/to/mcp-config.json",
       "chatTemplatePlaceholder": "空のままでモデルデフォルトを使用",
@@ -816,17 +829,17 @@
       "cacheTtlMinutes": "キャッシュ TTL (分)",
       "cacheTtlTooltip": "メモリ対応キャッシュエントリの有効期限。この期間内にアクセスされなかったエントリはメモリ解放のためにエビクションされます。「無期限」はメモリ圧迫時のみエビクションされることを意味します。メモリ内ページキャッシュ (RAM) がオンの間、この設定は効果がありません。その階層は最大キャッシュブロック数に基づく LRU エビクションを使用します。",
       "noExpiration": "無期限",
-      "cachingHelpBatchBody": "は vMLX のサーバーパフォーマンスの中核です。シンプルモード（一度に 1 リクエストのみ処理）と異なり、連続バッチ処理は複数のリクエストを同時に処理できます。さらに重要なのは、すべての高度なキャッシュ機能（プレフィックスキャッシュ、メモリ内ページキャッシュ、KV 量子化、ディスクキャッシュ）を有効にするために必要な点です。",
+      "cachingHelpBatchBody": "は bellaMLX のサーバーパフォーマンスの中核です。シンプルモード（一度に 1 リクエストのみ処理）と異なり、連続バッチ処理は複数のリクエストを同時に処理できます。さらに重要なのは、すべての高度なキャッシュ機能（プレフィックスキャッシュ、メモリ内ページキャッシュ、KV 量子化、ディスクキャッシュ）を有効にするために必要な点です。",
       "cachingHelpPrefixBody": "プレフィックスキャッシュは、以前のプロンプト（システムプロンプトや長いドキュメントなど）を記憶し、コストの高いプレフィルフェーズをスキップすることで対話を劇的に高速化します。",
       "memoryAwareDefaultBody": "明示的なメモリ境界（MB）またはシステム RAM 総量のパーセンテージに基づいてキャッシュをインテリジェントに管理します。制限を超えると最も古い項目を自動的にエビクションします。",
       "legacyEntryCountBody": "サイズに関係なく固定数の完全なプロンプト状態を保存するだけの、よりシンプルなシステムです。厳密に決定論的なエビクションが必要な場合に有用です。",
       "cachingHelpMambaBody": "Qwen 2.5/3、Falcon Mamba、Jamba などの新しいモデルは、標準の Attention（KV キャッシュ）と SSM ブロック（Mamba/Arrays キャッシュ）を混在させています。",
-      "kvQuantizationBody": "vMLX は Mamba 層を安全に分離します。KV 量子化（例: q8）をオンにすると、内部の Mamba/SSM メモリを完全精度のまま残しつつ Attention 層を安全に圧縮し、破損や品質低下がないことを保証します。",
+      "kvQuantizationBody": "bellaMLX は Mamba 層を安全に分離します。KV 量子化（例: q8）をオンにすると、内部の Mamba/SSM メモリを完全精度のまま残しつつ Attention 層を安全に圧縮し、破損や品質低下がないことを保証します。",
       "inMemoryPagedCacheBody": "一部のモデルは、プレフィックスキャッシュが有効な場合にこの RAM 階層を使用し、Attention KV ブロックとパス依存状態が 1 つのキャッシュ契約を共有します。対応モデルは代わりにブロックディスクキャッシュを SSD 専用階層として使用できます。",
       "kvQuantHelpBody1": "保存されたプロンプトを q8 または q4 精度に変換することで、キャッシュの RAM 使用量を 2〜4 倍削減できます。",
       "kvQuantHelpBody2": "実際のテキスト生成は MLX でネイティブに標準の完全精度で実行され続けます。",
       "vlHelpBody": "まったく同じ画像について繰り返し質問する場合（ダッシュボードを分析するツール呼び出しフローなど）、巨大なビジョン埋め込みプレフィルはキャッシュされ即座に再利用されます。",
-      "pagedCacheHint": "このリリースでは無効固定です。vMLX は再利用可能なプレフィックスとネイティブキャッシュブロックを SSD に保存し、ペイロードは一時的にのみ復元します。保持型のページ RAM ミラーは起動しません。",
+      "pagedCacheHint": "このリリースでは無効固定です。bellaMLX は再利用可能なプレフィックスとネイティブキャッシュブロックを SSD に保存し、ペイロードは一時的にのみ復元します。保持型のページ RAM ミラーは起動しません。",
       "dsv4PagedNote": "DSV4 は固定 256 トークンの型付き複合ブロックを権威ある SSD 階層で使用します。保持型ページ RAM ミラーは無効です。",
       "pagedCacheRequiresBatching": "メモリ内ページキャッシュ (RAM) には連続バッチ処理が必要です。RAM キャッシュ階層を有効にするには、上の並行処理セクションで「連続バッチ処理」をオンにしてください。",
       "pagedCacheDiskConflict": "メモリ内ページキャッシュ (RAM) と従来のディスクキャッシュは同時に実行できません。RAM 階層を有効にすると従来のディスクキャッシュは自動的に無効になります。永続的な SSD キャッシュには、代わりに下の「ブロックディスクキャッシュ (SSD / L2)」を使用してください。",
@@ -977,7 +990,7 @@
       "forceOff": "強制オフ",
       "dsv4TextRuntimeNote": "DSV4 Flash はテキストランタイムで提供されます。このバンドルには VL プロセッサパスがないため、画像/動画コントロールは非表示のままです。",
       "vlmDisabledSmelt": "Smelt モードが有効な間、VLM は無効です。Smelt は部分エキスパートサポートのためにテキスト専用の読み込みを使用します。",
-      "forceTextOnlyNote": "このバンドルにはメディアメタデータが含まれていますが、検出された vMLX ランタイムは現在テキスト専用です。そのファミリーのネイティブメディアパスがライブ検証されるまで添付は無効のままです。量子化形式を変更するだけではメディアルートは利用可能になりません。",
+      "forceTextOnlyNote": "このバンドルにはメディアメタデータが含まれていますが、検出された bellaMLX ランタイムは現在テキスト専用です。そのファミリーのネイティブメディアパスがライブ検証されるまで添付は無効のままです。量子化形式を変更するだけではメディアルートは利用可能になりません。",
       "vlmActiveNote": "VLM モードが有効です — MLLM スケジューラーが、プレフィックスキャッシュ、メモリ内ページキャッシュ (RAM)、KV 量子化のサポート付きで画像/動画処理を担当します。",
       "vlmOffNote": "VLM モードは、モデルがマルチモーダルとして自動検出されない場合にのみオフになります。検出された VLM バンドルは画像/動画サポート付きで起動します。",
       "omniBackend": "Omni バックエンド",
@@ -1036,7 +1049,7 @@
       "tensorNotImplemented": "テンソル並列はまだ実装されていません。今のところパイプライン並列を使用してください。",
       "clusterSecret": "クラスターシークレット",
       "clusterSecretTooltip": "ワーカーノード認証用の共有シークレット。すべてのワーカーが同じシークレットを使用する必要があります。空のままにすると認証なしになります（信頼できるネットワークでのみ安全）。",
-      "workerNodesNote": "ワーカーノード: 各 Mac に vMLX をインストールし、ターミナルから 'vmlx-worker --secret YOUR_SECRET' を実行してください。ワーカーは Bonjour 経由で自動アドバタイズされ、コーディネーターが自動的に検出します。",
+      "workerNodesNote": "ワーカーノード: 各 Mac に bellaMLX をインストールし、ターミナルから 'vmlx-worker --secret YOUR_SECRET' を実行してください。ワーカーは Bonjour 経由で自動アドバタイズされ、コーディネーターが自動的に検出します。",
       "setupStep2": "2. 各ワーカー Mac で:",
       "setupStep3": "3. Bonjour 検出により、ワーカーは上に自動的に表示されます",
       "setupStep4": "4. 検出で見つからない場合は「Add Manual」をクリックして IP で追加してください",
@@ -1059,7 +1072,7 @@
       "clearSsdCacheFailed": "消去できませんでした: {{error}}。セッションが実行中である必要があります。",
       "clearSsdCacheEmpty": "消去するものがありません — このセッションにキャッシュ済みプロンプトはありませんでした。",
       "clearSsdCachePartial": "{{count}} 個の層を消去しました。{{skipped}} は実行中のリクエストが使用中のため残されています。セッションがアイドルになってから再試行してください。",
-      "blockCacheArchitecturePoolNote": "すべて 1 つのプールです: この容量は vMLX が書き込むすべての種類のキャッシュを対象とします — 通常の KV ブロック、型付きコンパニオン状態 (SSM/GatedDelta)、ネイティブ複合レコード (DeepSeek-V4 DSA/CSA/HCA)、スライディングウィンドウ状態、マルチモーダルブロック — すべてのモデルとセッションについてです。いっぱいになると、現在使っていないモデルも含めて、それら全体で最も古いプロンプトから削除されます。",
+      "blockCacheArchitecturePoolNote": "すべて 1 つのプールです: この容量は bellaMLX が書き込むすべての種類のキャッシュを対象とします — 通常の KV ブロック、型付きコンパニオン状態 (SSM/GatedDelta)、ネイティブ複合レコード (DeepSeek-V4 DSA/CSA/HCA)、スライディングウィンドウ状態、マルチモーダルブロック — すべてのモデルとセッションについてです。いっぱいになると、現在使っていないモデルも含めて、それら全体で最も古いプロンプトから削除されます。",
       "videoMaxPixels": "動画フレームのピクセル上限",
       "videoMaxPixelsTooltip": "サンプリングした各動画フレームをリサイズ後に許容する最大ピクセル数（アスペクト比を維持し、モデルのパッチサイズに丸めます）。小さいほどフレームあたりの視覚トークンが減り、プリフィルが速くなりますが空間的な詳細は減ります。プロセッサ既定のままにするとモデル自身のサイズ設定を使います。ネイティブローダーの上限は602kです。",
       "videoMaxPixelsDefault": "プロセッサ既定",
@@ -1113,7 +1126,7 @@
       "modelLabel": "モデル",
       "imageServerEditHint": "画像サーバーはプロンプトで画像を編集するための /v1/images/edits エンドポイントを公開します。Image タブまたは任意の API クライアントを使用してください。",
       "imageServerGenHint": "画像サーバーは /v1/images/generations エンドポイント (OpenAI 互換) を公開します。Image タブまたは任意の API クライアントで画像を生成できます。",
-      "engineNotFound": "推論エンジンが見つかりません。vMLXを再起動して初回セットアップを実行するか、手動でインストールしてください:",
+      "engineNotFound": "推論エンジンが見つかりません。bellaMLXを再起動して初回セットアップを実行するか、手動でインストールしてください:",
       "creatingSession": "セッションを作成中...",
       "sessionCreated": "セッションを作成しました: {id}",
       "serverReady": "サーバーの準備ができました!",
@@ -1128,7 +1141,7 @@
       "directoriesTitle": "モデルスキャンディレクトリを設定",
       "detectProcesses": "プロセスを検出",
       "newSession": "+ 新規セッション",
-      "dirManagerDescription": "vMLX は新規セッション作成時にこれらのディレクトリからモデルをスキャンします。",
+      "dirManagerDescription": "bellaMLX は新規セッション作成時にこれらのディレクトリからモデルをスキャンします。",
       "emptyHeader": "セッションがありません",
       "emptyBody": "セッションを作成してモデルをロードしチャットを開始するか、実行中のサーバーを検出してください。",
       "createSession": "セッションを作成",
@@ -1657,7 +1670,8 @@
       "startTimedOut5m": "セッションの起動が5分でタイムアウトしました",
       "createFailed": "セッションを作成できませんでした",
       "createdNotFound": "セッションは作成されましたが見つかりません",
-      "sessionFailedToStart": "セッションの起動に失敗しました"
+      "sessionFailedToStart": "セッションの起動に失敗しました",
+      "startCancelled": "モデルの読み込みをキャンセルしました"
     },
     "drawer": {
       "restartedToast": "新しい設定で再起動しました。",
@@ -2016,7 +2030,7 @@
   },
   "update": {
     "banner": {
-      "versionLabel": "vMLX {version}",
+      "versionLabel": "bellaMLX {version}",
       "available": "が利用可能です",
       "download": "ダウンロード",
       "starOnGitHub": "GitHub でスターを付ける",
@@ -2030,7 +2044,7 @@
   },
   "main": {
     "tray": {
-      "modelsLoaded": "vMLX — {n} モデル読み込み済み",
+      "modelsLoaded": "bellaMLX — {n} モデル読み込み済み",
       "apiGateway": "API ゲートウェイ: localhost:{port}",
       "copyApiUrl": "API URL をコピー",
       "singleModelMode": "ゲートウェイ単一モデルモード",
@@ -2045,14 +2059,14 @@
       "sleep": "スリープ",
       "noModels": "モデルが読み込まれていません",
       "memory": "メモリ: {used} / {total} GB",
-      "openWindow": "vMLX ウィンドウを開く",
-      "quit": "vMLX を終了",
-      "tooltipRunningSleeping": "vMLX — {running} 実行中、{standby} スリープ中",
-      "tooltipNoModels": "vMLX — モデルが読み込まれていません"
+      "openWindow": "bellaMLX ウィンドウを開く",
+      "quit": "bellaMLX を終了",
+      "tooltipRunningSleeping": "bellaMLX — {running} 実行中、{standby} スリープ中",
+      "tooltipNoModels": "bellaMLX — モデルが読み込まれていません"
     },
     "dialog": {
       "unexpectedErrorTitle": "予期しないエラー",
-      "unexpectedErrorBody": "vMLX でエラーが発生しました:\n\n{message}\n\nアプリを終了します。",
+      "unexpectedErrorBody": "bellaMLX でエラーが発生しました:\n\n{message}\n\nアプリを終了します。",
       "dbRecoveredTitle": "データベースを復旧しました",
       "dbRecoveredMessage": "チャットデータベースが破損し、再作成されました。",
       "dbRecoveredDetail": "以前のデータは以下の場所にバックアップされました:\n{path}",

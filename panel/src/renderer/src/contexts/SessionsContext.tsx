@@ -70,10 +70,24 @@ export function SessionsProvider({ children }: { children: React.ReactNode }) {
   const sessionsRef = useRef(sessions)
   sessionsRef.current = sessions
 
+  const listRevision = useRef(0)
+  const eventRevision = useRef(0)
+  const eventPatches = useRef(new Map<string, { revision: number; patch: Partial<SessionSummary> }>())
+  const recordEvent = (id: string, patch: Partial<SessionSummary>) => {
+    eventPatches.current.set(id, { revision: ++eventRevision.current, patch: { ...eventPatches.current.get(id)?.patch, ...patch } })
+  }
   const refreshSessions = useCallback(async () => {
+    const requestedRevision = ++listRevision.current
+    const requestedEventRevision = eventRevision.current
     try {
       const list = await window.api.sessions.list()
-      setSessions(list)
+      if (requestedRevision !== listRevision.current) return
+      const reconciled = list.map((session: SessionSummary) => {
+        const event = eventPatches.current.get(session.id)
+        return event && event.revision > requestedEventRevision ? { ...session, ...event.patch } : session
+      })
+      sessionsRef.current = reconciled
+      setSessions(reconciled)
     } catch { /* ignore */ }
   }, [])
 
@@ -101,6 +115,7 @@ export function SessionsProvider({ children }: { children: React.ReactNode }) {
       window.api.sessions.onDeleted(() => refreshSessions()),
       window.api.sessions.onUpdated(() => refreshSessions()),
       window.api.sessions.onStarting((data: any) => {
+        recordEvent(data.sessionId, { status: 'loading' })
         setSessions(prev => prev.map(s => s.id === data.sessionId ? { ...s, status: 'loading' as const } : s))
         setLoadProgress(prev => { const next = new Map(prev); next.delete(data.sessionId); return next })
       }),
@@ -108,6 +123,7 @@ export function SessionsProvider({ children }: { children: React.ReactNode }) {
         // Restart promotes pending launch settings after session:updated. The
         // pre-restart list still carries the old active config; status/PID alone
         // cannot refresh the config consumed by the chat toolbar and drawers.
+        recordEvent(data.sessionId, { status: 'running', ...(data.pid ? { pid: data.pid } : {}), ...(data.port ? { port: data.port } : {}) })
         void refreshSessions()
         setSessions(prev => prev.map(s =>
           s.id === data.sessionId
@@ -125,10 +141,12 @@ export function SessionsProvider({ children }: { children: React.ReactNode }) {
         // fabricating it here ended the bar before the model was ready.
       }),
       window.api.sessions.onStopped((data: any) => {
+        recordEvent(data.sessionId, { status: 'stopped', pid: undefined })
         setSessions(prev => prev.map(s => s.id === data.sessionId ? { ...s, status: 'stopped' as const, pid: undefined } : s))
         setLoadProgress(prev => { const next = new Map(prev); next.delete(data.sessionId); return next })
       }),
       window.api.sessions.onError((data: any) => {
+        recordEvent(data.sessionId, { status: 'error' })
         setSessions(prev => prev.map(s => s.id === data.sessionId ? { ...s, status: 'error' as const } : s))
         setLoadingSessions(prev => {
           const next = new Set(prev)
@@ -182,129 +200,81 @@ export function SessionsProvider({ children }: { children: React.ReactNode }) {
         // Only set 'running' when the model is actually loaded (data.running === true)
         // The health monitor sends running=false when server is up but model still loading
         if (data.running) {
+          recordEvent(data.sessionId, { status: 'running', ...(data.modelName ? { modelName: data.modelName } : {}) })
           setSessions(prev => prev.map(s =>
             s.id === data.sessionId ? { ...s, status: 'running' as const, ...(data.modelName ? { modelName: data.modelName } : {}) } : s
           ))
         }
       }),
       ...(window.api.sessions.onStandby ? [window.api.sessions.onStandby((data: any) => {
+        recordEvent(data.sessionId, { status: 'standby', standbyDepth: data.depth || 'soft' })
         setSessions(prev => prev.map(s =>
           s.id === data.sessionId ? { ...s, status: 'standby' as const, standbyDepth: data.depth || 'soft' } : s
         ))
       })] : []),
     ]
 
-    return () => unsubs.forEach(fn => fn())
+    return () => { listRevision.current++; unsubs.forEach(fn => fn()) }
   }, [])
 
-  const ensureSessionRunning = useCallback(async (modelPath: string): Promise<SessionSummary> => {
-    const current = sessionsRef.current
-
-    // Check if already running
-    const existing = current.find(s => s.modelPath === modelPath && s.status === 'running')
-    if (existing) return existing
-
-    // Standby sessions have a live process — wake them instead of starting fresh
-    const standby = current.find(s => s.modelPath === modelPath && s.status === 'standby')
-    if (standby) {
-      await window.api.sessions.wake?.(standby.id)
-      // Return immediately — JIT middleware on the server handles the rest
-      return { ...standby, status: 'running' }
-    }
-
-    // Check if loading
-    const loading = current.find(s => s.modelPath === modelPath && s.status === 'loading')
-    if (loading) {
-      return new Promise((resolve, reject) => {
-        const timeout = setTimeout(() => { unsubReady(); unsubErr(); reject(new Error(t('sessions.context.startTimedOut'))) }, 300000) // 5 min — JANG/large models need time
-        const unsubReady = window.api.sessions.onReady((data: any) => {
-          if (data.sessionId === loading.id) {
-            clearTimeout(timeout)
-            unsubReady()
-            unsubErr()
-            refreshSessions().then(() => {
-              resolve({
-                ...loading,
-                status: 'running',
-                ...(data.pid ? { pid: data.pid } : {}),
-                ...(data.port ? { port: data.port } : {})
-              })
-            })
-          }
-        })
-        const unsubErr = window.api.sessions.onError((data: any) => {
-          if (data.sessionId === loading.id) {
-            clearTimeout(timeout)
-            unsubReady()
-            unsubErr()
-            reject(new Error(data.error || t('sessions.context.sessionFailedToStart')))
-          }
-        })
-      })
-    }
-
-    // Find stopped session or create new
-    setLoadingSessions(prev => new Set(prev).add(modelPath))
-
-    let session = current.find(s => s.modelPath === modelPath)
-    if (!session) {
-      const result = await window.api.sessions.create(modelPath, {})
-      if (!result.success) {
-        setLoadingSessions(prev => { const next = new Set(prev); next.delete(modelPath); return next })
-        throw new Error(result.error || t('sessions.context.createFailed'))
-      }
-      await refreshSessions()
-      session = sessionsRef.current.find(s => s.modelPath === modelPath)
-      if (!session) {
-        setLoadingSessions(prev => { const next = new Set(prev); next.delete(modelPath); return next })
-        throw new Error(t('sessions.context.createdNotFound'))
-      }
-    }
-
-    // Start the session
-    if (session.status !== 'running' && session.status !== 'loading') {
-      const result = await window.api.sessions.start(session.id)
-      if (!result.success) {
-        setLoadingSessions(prev => { const next = new Set(prev); next.delete(modelPath); return next })
-        throw new Error(result.error || t('sessions.dashboard.toast.startFailed'))
-      }
-    }
-
-    // Wait for ready
-    const sessionId = session.id
-    return new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        unsubReady()
-        unsubErr()
-        setLoadingSessions(prev => { const next = new Set(prev); next.delete(modelPath); return next })
-        reject(new Error(t('sessions.context.startTimedOut5m')))
-      }, 300000)
-      const unsubReady = window.api.sessions.onReady((data: any) => {
-        if (data.sessionId === sessionId) {
-          clearTimeout(timeout)
-          unsubReady()
-          unsubErr()
-          setLoadingSessions(prev => { const next = new Set(prev); next.delete(modelPath); return next })
-          refreshSessions().then(() => {
-            resolve({
-              ...session!,
-              status: 'running',
-              ...(data.pid ? { pid: data.pid } : {}),
-              ...(data.port ? { port: data.port } : {})
-            })
-          })
+  const pendingStarts = useRef(new Map<string, Promise<SessionSummary>>())
+  const ensureSessionRunning = useCallback((modelPath: string): Promise<SessionSummary> => {
+    const pending = pendingStarts.current.get(modelPath)
+    if (pending) return pending
+    const operation = (async (): Promise<SessionSummary> => {
+      setLoadingSessions(prev => new Set(prev).add(modelPath))
+      let cleanup = () => {}
+      try {
+        await refreshSessions()
+        let session = sessionsRef.current.find(s => s.modelPath === modelPath)
+        if (!session) {
+          const result = await window.api.sessions.create(modelPath, {})
+          if (!result.success || !result.session) throw new Error(result.error || t('sessions.context.createFailed'))
+          session = result.session as SessionSummary
         }
-      })
-      const unsubErr = window.api.sessions.onError((data: any) => {
-        if (data.sessionId === sessionId) {
-          clearTimeout(timeout)
-          unsubReady()
-          unsubErr()
-          setLoadingSessions(prev => { const next = new Set(prev); next.delete(modelPath); return next })
-          reject(new Error(data.error || t('sessions.context.sessionFailedToStart')))
+        if (session.status === 'running') return session
+        if (session.status === 'standby') {
+          const result = await window.api.sessions.wake(session.id)
+          if (!result.success) throw new Error(result.error || t('sessions.context.sessionFailedToStart'))
+          await refreshSessions()
+          return { ...session, status: 'running' }
         }
-      })
-    })
+        const target = session
+        // Subscribe before start: remote/fast engines can emit ready before
+        // their start IPC response resolves. Stop must settle pending callers.
+        let timeout: ReturnType<typeof setTimeout>
+        const unsubs: Array<() => void> = []
+        const ready = new Promise<SessionSummary>((resolve, reject) => {
+          unsubs.push(window.api.sessions.onReady((data: any) => {
+            if (data.sessionId === target.id) resolve({ ...target, status: 'running', ...(data.pid ? { pid: data.pid } : {}), ...(data.port ? { port: data.port } : {}) })
+          }))
+          unsubs.push(window.api.sessions.onError((data: any) => {
+            if (data.sessionId === target.id) reject(new Error(data.error || t('sessions.context.sessionFailedToStart')))
+          }))
+          unsubs.push(window.api.sessions.onStopped((data: any) => {
+            if (data.sessionId === target.id) reject(new Error(t('sessions.context.startCancelled')))
+          }))
+          timeout = setTimeout(() => reject(new Error(t('sessions.context.startTimedOut5m'))), 300000)
+        })
+        // A terminal event may precede the start IPC reply.
+        void ready.catch(() => {})
+        cleanup = () => { clearTimeout(timeout); unsubs.forEach(unsubscribe => unsubscribe()) }
+        const start = target.status === 'loading' ? ready : window.api.sessions.start(target.id).then(result => {
+          if (!result.success) throw new Error(result.error || t('sessions.context.sessionFailedToStart'))
+          return ready
+        })
+        const running = await Promise.race([ready, start])
+        await refreshSessions()
+        return running
+      } finally {
+        cleanup()
+        setLoadingSessions(prev => { const next = new Set(prev); next.delete(modelPath); return next })
+      }
+    })()
+    pendingStarts.current.set(modelPath, operation)
+    const release = () => { if (pendingStarts.current.get(modelPath) === operation) pendingStarts.current.delete(modelPath) }
+    void operation.then(release, release)
+    return operation
   }, [refreshSessions, t])
 
   return (

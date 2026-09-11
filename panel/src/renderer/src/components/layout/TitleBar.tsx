@@ -48,7 +48,7 @@ export function TitleBar() {
       </div>
 
       <div className="flex-1 min-w-0 text-center text-[11px] tracking-[0.14em] text-muted-foreground truncate">
-        vmlx / Console
+        {t('app.desktopTitle')}
       </div>
 
       {/* Right: language picker + preferences. Console is the only theme. */}
@@ -109,10 +109,19 @@ function LanguagePicker({
         setOpen(false);
       }
     }
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setOpen(false);
+        ref.current?.querySelector('button')?.focus();
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown);
     document.addEventListener("mousedown", handleClickOutside);
     window.addEventListener("resize", place);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener("resize", place);
     };
   }, [open]);
@@ -123,6 +132,8 @@ function LanguagePicker({
     <div className="relative" ref={ref}>
       <button
         data-vmlx-locale-picker="true"
+        aria-expanded={open}
+        aria-label={t("titlebar.languageTitle")}
         data-vmlx-supported-locales={LOCALES.join(",")}
         onClick={() => setOpen(!open)}
         className="p-1 text-muted-foreground hover:text-foreground rounded hover:bg-accent transition-colors text-sm leading-none"
@@ -150,6 +161,7 @@ function LanguagePicker({
                 onClick={() => {
                   setLocale(l);
                   setOpen(false);
+                  ref.current?.querySelector('button')?.focus();
                 }}
                 className={`w-full text-left px-3 py-1.5 text-sm flex items-center gap-2 hover:bg-accent transition-colors ${
                   locale === l ? "bg-primary/10 font-medium" : ""

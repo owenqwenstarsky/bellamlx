@@ -1,0 +1,57 @@
+bellaMLX inherited attribution and license notices
+
+The following legal and credit passages are preserved verbatim from inherited project documentation at b3e0a512. Full historical documents remain in Git history. Standalone LICENSE, NOTICE, and font OFL files remain in their original locations.
+
+Source: README.md (upstream Git history)
+## License
+
+Apache License 2.0 -- see [LICENSE](LICENSE).
+
+---
+
+<p align="center">
+  Built by <a href="https://github.com/jjang-ai">Jinho Jang</a> (eric@jangq.ai)<br>
+  <a href="https://jangq.ai">JANGQ AI</a> &bull; <a href="https://pypi.org/project/vmlx/">PyPI</a> &bull; <a href="https://github.com/jjang-ai/vmlx">GitHub</a> &bull; <a href="https://github.com/jjang-ai/mlxstudio/releases">Downloads</a>
+</p>
+
+---
+
+Source: docs/index.md (upstream Git history)
+## License
+
+Apache 2.0 - See [LICENSE](../LICENSE) for details.
+
+Source: docs/mlxstudio-releases-readme.md (upstream Git history)
+## License
+
+Apache License 2.0. See [LICENSE](LICENSE) for details.
+
+Source: panel/README.md (upstream Git history)
+## Credits
+
+- **[vMLX Engine](https://github.com/jjang-ai/vmlx)** — Apple Silicon inference engine
+- **[MLX](https://github.com/ml-explore/mlx)** — Apple's ML framework
+- **[mlx-lm](https://github.com/ml-explore/mlx-lm)** — LLM inference
+- **[mlx-vlm](https://github.com/Blaizzy/mlx-vlm)** — Vision-language models
+- **[Electron](https://www.electronjs.org/)** — Desktop app framework
+
+---
+
+## License
+
+Apache 2.0 — Copyright 2026 JANGQ AI. See [LICENSE](LICENSE).
+
+Source: panel/scripts/patches/README.md (upstream Git history)
+Each `*.patched.py` file in this directory is a **controlled fork** of an
+upstream `mlx_lm` model file (Apache-2.0, attribution preserved in-file).
+
+Source: native_extensions/qsa_kernels/README.md (upstream Git history)
+Vendored from oMLX PR #3244 at revision
+`dc312e6e905e03d21ef0c4a86289cbfa2cf857cc`. See
+`mtplx_qsa_kernels/NOTICE` for provenance, MTPLX modifications, and licenses.
+
+Source: native_extensions/qsa_kernels/VMLX_INTEGRATION.md (upstream Git history)
+Vendored from MTPLX revision `21be78b3f51820eecef020e5e4855c0715eaf9a5`.
+vMLX adds a separate materialized sparse-QK primitive; the original fused
+primitive remains available for API compatibility. See `mtplx_qsa_kernels/NOTICE` and the
+license files for oMLX, MLX, mlx-serve, and MTPLX provenance.

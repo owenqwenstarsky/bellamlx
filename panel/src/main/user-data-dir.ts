@@ -1,6 +1,6 @@
 import { app } from 'electron'
 import { mkdirSync } from 'fs'
-import { resolve } from 'path'
+import { join, resolve } from 'path'
 
 function valueFromArgv(argv: string[]): string | undefined {
   for (let i = 0; i < argv.length; i += 1) {
@@ -40,8 +40,15 @@ export function applyUserDataDirOverride(): string | undefined {
   // imported and opens chats.db.
   ensureUserDataDirExists(dir)
   app.setPath('userData', dir)
-  console.log(`[STARTUP] Using vMLX userData override: ${dir}`)
+  console.log(`[STARTUP] Using bellaMLX userData override: ${dir}`)
   return dir
 }
 
+// Set identity before any database or settings module reads userData.
+if (app?.setName) {
+  app.setName('bellaMLX')
+  const isolated = resolveUserDataDirOverride() || join(app.getPath('appData'), 'bellaMLX')
+  ensureUserDataDirExists(isolated)
+  app.setPath('userData', isolated)
+}
 applyUserDataDirOverride()

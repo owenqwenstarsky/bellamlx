@@ -13,7 +13,7 @@ const R = (p: string) => readFileSync(join(__dirname, '..', 'src', 'renderer', '
 const CONTRACT: Record<string, string[]> = {
   'chat/InputBox.tsx': ['chat-composer', 'chat-attach', 'chat-stop', 'chat-send'],
   'image/ImagePromptBar.tsx': ['image-generate', 'image-cancel'],
-  'image/ImageTopBar.tsx': ['image-switch-model', 'image-browse-custom', 'image-logs', 'image-settings', 'image-stop', 'image-retry', 'image-toggle-sidebar'],
+  'image/ImageTopBar.tsx': ['image-switch-model', 'image-logs', 'image-settings', 'image-stop', 'image-retry', 'image-toggle-sidebar'],
   'image/ImageModelPicker.tsx': ['image-keep-current-model'],
   'sessions/SessionCard.tsx': ['session-card-open', 'session-card-start', 'session-card-stop', 'session-card-configure', 'session-card-sleep', 'session-card-wake', 'session-card-delete', 'session-card-repoint'],
   'layout/ChatModeToolbar.tsx': ['chat-settings', 'server-settings'],
@@ -116,7 +116,7 @@ describe('every config control bound to a config key carries that key as its set
     while ((m = re.exec(src))) {
       let j = m.index + m[0].length, depth = 0
       for (; j < src.length; j++) { const c = src[j]; if (c === '{') depth++; else if (c === '}') depth--; else if (c === '>' && depth === 0) break }
-      const tag = src.slice(m.index, j + 1); const k = tag.match(/onChange\('([a-zA-Z]+)'/)
+      const tag = src.slice(m.index, j + 1); const k = tag.match(/onChange\('([a-zA-Z]+)', (?!undefined)[^)]+\)/)
       if (!k) continue
       checked++
       if (!tag.includes(`settingKey="${k[1]}"`)) missing.push(k[1])

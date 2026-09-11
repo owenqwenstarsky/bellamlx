@@ -27,7 +27,7 @@ function flatten(obj: any, prefix = '', out: Set<string> = new Set()): Set<strin
 const root = join(__dirname, '..', 'src')
 const en = flatten(JSON.parse(readFileSync(join(root, 'renderer', 'src', 'i18n', 'locales', 'en.json'), 'utf8')))
 // t('a.b.c') / t("a.b.c") / t(`a.b.c`) with a literal (no interpolation) first argument
-const CALL = /\bt\(\s*(['"`])([A-Za-z0-9_.-]+)\1/g
+const CALL = /\bt\(\s*(['"`])([A-Za-z0-9_.-]+)\1(?=\s*[,\)])/g
 
 describe('i18n keys used in source exist in en.json', () => {
   const files = walk(join(root, 'renderer', 'src')).concat(walk(join(root, 'main')))

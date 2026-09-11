@@ -1,3 +1,4 @@
+import { useChatSessionBinding } from './hooks/useChatSessionBinding'
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { MessageSquare, ArrowLeft, Terminal } from 'lucide-react'
 import { TitleBar } from './components/layout/TitleBar'
@@ -81,16 +82,8 @@ function App() {
     return () => window.removeEventListener('vmlx:navigate', handler)
   }, [setMode, dispatch])
 
-  // If the active session was deleted, fall back to another session
-  useEffect(() => {
-    if (state.activeSessionId && sessions.length > 0 && !sessions.find(s => s.id === state.activeSessionId)) {
-      // Active session no longer exists — switch to first available
-      const fallback = sessions.find(s => s.status === 'running') || sessions[0]
-      if (fallback && state.activeChatId) {
-        openChat(state.activeChatId, fallback.id)
-      }
-    }
-  }, [sessions, state.activeSessionId, state.activeChatId, openChat])
+  // A deleted session leaves its chat unbound. Never silently send that
+  // conversation to an unrelated running model.
 
   // Resolve the endpoint for the active session. A chat can stay pinned to a
   // stopped DUPLICATE session of the same model (identity split across path
@@ -203,19 +196,9 @@ function App() {
     }
   }
 
-  const handleSessionChange = useCallback(async (sessionId: string) => {
-    if (!state.activeChatId) return
-    // Find the new session to get its modelPath
-    const newSession = sessions.find(s => s.id === sessionId)
-    if (newSession) {
-      // Update the chat's model_path in DB so it persists across reloads
-      await window.api.chat.update(state.activeChatId, {
-        modelId: newSession.modelPath,
-        modelPath: newSession.modelPath
-      } as any).catch((err) => console.error('Failed to update chat model:', err))
-    }
-    dispatch({ type: 'OPEN_CHAT', chatId: state.activeChatId, sessionId })
-  }, [dispatch, state.activeChatId, sessions])
+  const handleSessionChange = useChatSessionBinding(
+    state.activeChatId, sessions, openChat, setChatCreationError,
+  )
 
   // Setup screen
   if (checkingSetup) return null

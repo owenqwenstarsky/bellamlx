@@ -1,3 +1,2 @@
-self-hosted-runner:
-  labels:
-    - vmlx-release
+# bellaMLX CI uses GitHub-hosted macOS runners; no upstream release labels.
+{}

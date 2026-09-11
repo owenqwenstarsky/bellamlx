@@ -1,4 +1,5 @@
 import './user-data-dir'
+import { registerSettingsHandlers } from './ipc/settings'
 import { app, BrowserWindow, ipcMain, dialog, shell, session } from 'electron'
 import { join } from 'path'
 import { readFileSync } from 'fs'
@@ -173,6 +174,8 @@ function createWindow(): void {
   mainWindow = new BrowserWindow({
     width: 1400,
     height: 900,
+    minWidth: 800,
+    minHeight: 600,
     backgroundColor: '#1A1C1D',
     show: false,
     autoHideMenuBar: true,
@@ -282,21 +285,7 @@ function createWindow(): void {
     ipcMain.handle('app:totalMemoryGB', () =>
       Math.round(require('os').totalmem() / (1024 ** 3)))
 
-    // App-level settings (API keys, preferences)
-    ipcMain.handle('settings:get', (_e, key: string) => {
-      return db.getSetting(key) ?? null
-    })
-    ipcMain.handle('settings:has', (_e, key: string) => {
-      return db.hasSetting(key)
-    })
-    ipcMain.handle('settings:set', (_e, key: string, value: string) => {
-      db.setSetting(key, value)
-      return { success: true }
-    })
-    ipcMain.handle('settings:delete', (_e, key: string) => {
-      db.deleteSetting(key)
-      return { success: true }
-    })
+    registerSettingsHandlers()
     ipcMain.handle(
       'models:dismissMtpComponentUpdate',
       (_e, repoId: string, remoteFingerprint: string) => {
@@ -420,7 +409,7 @@ app.whenReady().then(async () => {
   if (is.dev && process.platform === 'darwin') {
     app.dock?.setIcon(join(app.getAppPath(), 'resources/icon.png'))
   }
-  electronApp.setAppUserModelId('net.vmlx.app')
+  electronApp.setAppUserModelId('app.bellamlx.desktop')
 
   // Main-process i18n: load all 5 locale JSONs. The active locale is
   // restored from the DB setting on boot (if any) and overridden by the
@@ -519,24 +508,9 @@ app.whenReady().then(async () => {
   const appVersion = JSON.parse(readFileSync(join(__dirname, '../../package.json'), 'utf-8')).version
   checkForUpdates(() => mainWindow, appVersion)
 
-  // Detect and adopt existing vmlx-engine processes on normal startup. An
-  // explicitly isolated proof instance owns only the engines it launches.
+  // bellaMLX never imports upstream running processes into a fresh profile.
   if (proofOwnedEngineLifecycle) {
     console.log('[STARTUP] Skipping global vmlx-engine detection for proof-owned lifecycle')
-  } else {
-    try {
-      const adopted = await sessionManager.detectAndAdoptAll()
-      if (adopted.length > 0) {
-        console.log(`[STARTUP] Adopted ${adopted.length} vmlx-engine process(es):`)
-        for (const s of adopted) {
-          console.log(`  - ${s.modelName || s.modelPath} on port ${s.port} (PID ${s.pid})`)
-        }
-      } else {
-        console.log('[STARTUP] No existing vmlx-engine processes found')
-      }
-    } catch (e) {
-      console.error('[STARTUP] Error during process detection:', e)
-    }
   }
 
   // Start global health monitor for all sessions

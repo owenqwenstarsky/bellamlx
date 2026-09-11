@@ -1,28 +1,26 @@
 {
-  "name": "vmlx",
+  "name": "bellamlx",
   "version": "1.6.57",
-  "description": "The most complete MLX inference engine for Mac — voice, vision, Mamba, 5-layer caching, 20+ agentic tools",
+  "description": "bellaMLX desktop UI for local MLX inference",
   "main": "dist/main/index.mjs",
   "author": "Jinho Jang <eric@jangq.ai>",
   "license": "SEE LICENSE IN LICENSE",
-  "homepage": "https://vmlx.net",
   "scripts": {
     "dev": "electron-vite dev",
     "build": "./scripts/bundle-python.sh && ./scripts/verify-bundled-python.sh && electron-vite build",
-    "release:gate": "./scripts/release-gate-python-app.py",
-    "release:ready": "cd .. && ${PYTHON:-.venv/bin/python} tests/cross_matrix/run_release_regression_manifest.py --require-release-ready --out build/current-release-regression-manifest-pre-panel-dist.json",
-    "release:prepackage": "cd .. && ${PYTHON:-.venv/bin/python} tests/cross_matrix/run_release_regression_manifest.py --require-prepackage-ready --out build/current-release-regression-manifest-pre-panel-dist.json",
     "verify-bundled": "./scripts/verify-bundled-python.sh",
     "preview": "electron-vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit -p tsconfig.tests.json",
     "lint": "eslint src --ext .ts,.tsx",
     "format": "prettier --write \"src/**/*.{ts,tsx,json,md}\"",
     "icons": "node generate-icons.js",
     "package": "npm run dist",
-    "dist": "VMLX_RELEASE_SCOPE=production ./scripts/build-release-dmgs.sh all",
-    "postinstall": "electron-builder install-app-deps"
+    "dist": "npm run build && electron-builder --dir --publish never",
+    "postinstall": "electron-builder install-app-deps",
+    "build:ui": "electron-vite build",
+    "test:electron": "npm run build:ui && node tests/electron/build.mjs && playwright test"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
@@ -56,7 +54,10 @@
     "@electron-toolkit/eslint-config-ts": "^1.0.1",
     "@electron-toolkit/tsconfig": "^1.0.1",
     "@electron/notarize": "^3.1.1",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/typography": "^0.5.19",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
     "@types/better-sqlite3": "^7.6.13",
     "@types/dompurify": "^3.0.5",
     "@types/js-yaml": "^4.0.9",
@@ -73,6 +74,7 @@
     "electron-vite": "^2.0.0",
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.33.2",
+    "jsdom": "^30.0.1",
     "playwright-core": "^1.60.0",
     "postcss": "^8.5.26",
     "prettier": "^3.2.5",
@@ -83,13 +85,9 @@
     "vitest": "^4.0.18"
   },
   "build": {
-    "appId": "net.vmlx.app",
-    "productName": "vMLX",
+    "appId": "app.bellamlx.desktop",
+    "productName": "bellaMLX",
     "copyright": "Copyright 2026 JANGQ AI. All rights reserved.",
-    "beforePack": "scripts/electron-builder-before-pack.cjs",
-    "afterPack": "scripts/electron-builder-after-pack.cjs",
-    "artifactBuildStarted": "scripts/electron-builder-after-all-artifact-build.cjs",
-    "afterAllArtifactBuild": "scripts/electron-builder-after-all-artifact-build.cjs",
     "mac": {
       "category": "public.app-category.developer-tools",
       "icon": "resources/icon.png",
@@ -104,14 +102,12 @@
       "signIgnore": [
         "\\.safetensors$"
       ],
-      "notarize": {
-        "teamId": "55KGF2S5AY"
-      },
-      "minimumSystemVersion": "14.5.0"
+      "minimumSystemVersion": "14.5.0",
+      "identity": null
     },
     "dmg": {
-      "sign": true,
-      "writeUpdateInfo": true,
+      "sign": false,
+      "writeUpdateInfo": false,
       "background": "build/dmg-background.png",
       "window": {
         "width": 760,
@@ -122,7 +118,7 @@
         {
           "x": 160,
           "y": 220,
-          "name": "vMLX.app"
+          "name": "bellaMLX.app"
         },
         {
           "x": 600,
@@ -154,17 +150,33 @@
       {
         "from": "../pyproject.toml",
         "to": "vmlx-engine-source/pyproject.toml"
+      },
+      {
+        "from": "../README.md",
+        "to": "vmlx-engine-source/README.md"
+      },
+      {
+        "from": "../LICENSE",
+        "to": "LICENSE"
+      },
+      {
+        "from": "../THIRD_PARTY_NOTICES.txt",
+        "to": "THIRD_PARTY_NOTICES.txt"
       }
     ],
     "files": [
       "dist/**/*",
       "out/**/*",
       "resources/**/*",
-      "!**/.DS_Store"
+      "!**/.DS_Store",
+      "!dist/test/**"
     ],
     "directories": {
       "buildResources": "resources",
       "output": "release"
     }
+  },
+  "engines": {
+    "node": ">=22 <23"
   }
 }

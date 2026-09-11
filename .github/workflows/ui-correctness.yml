@@ -1,0 +1,44 @@
+name: bellaMLX UI correctness
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  unit:
+    runs-on: macos-14
+    defaults:
+      run:
+        working-directory: panel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: panel/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+  electron:
+    runs-on: macos-14
+    defaults:
+      run:
+        working-directory: panel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: panel/package-lock.json
+      - run: npm ci
+      - run: npm run test:electron
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: electron-failure
+          path: |
+            panel/test-results
+            panel/playwright-report

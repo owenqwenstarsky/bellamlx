@@ -22,7 +22,7 @@ describe('manual session single-model enforcement', () => {
     const stopStart = source.indexOf('async stopAll(): Promise<void>')
     const stopEnd = source.indexOf('// ─── Queries', stopStart)
     const stopBlock = source.slice(stopStart, stopEnd)
-    expect(stopBlock).toContain('const processes = await this.detect()')
+    expect(stopBlock).not.toContain('await this.detect()') // Shutdown owns only managed processes.
     expect(stopBlock).toContain("managed.process.kill('SIGTERM')")
     expect(stopBlock).toContain("managed.process.kill('SIGKILL')")
   })

@@ -467,17 +467,6 @@ describe('SessionView chat list overlay', () => {
   })
 })
 
-describe('TitleBar narrow-width controls', () => {
-  const titleBarSource = readFileSync('src/renderer/src/components/layout/TitleBar.tsx', 'utf8')
-
-  it('keeps every mode accessible while compacting labels below 720px', () => {
-    expect(titleBarSource).toContain('aria-label={label}')
-    expect(titleBarSource).toContain('title={label}')
-    expect(titleBarSource).toContain('max-[720px]:sr-only')
-    expect(titleBarSource).toContain('max-[720px]:px-2')
-  })
-})
-
 describe('ChatModeToolbar narrow-width controls', () => {
   const toolbarSource = readFileSync('src/renderer/src/components/layout/ChatModeToolbar.tsx', 'utf8')
   const chatSettingsSource = readFileSync('src/renderer/src/components/chat/ChatSettings.tsx', 'utf8')

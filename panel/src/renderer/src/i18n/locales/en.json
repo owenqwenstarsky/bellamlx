@@ -1,5 +1,16 @@
 {
-  "console": {"chatImages":"Chat & Images","serversApi":"Servers & API","models":"Models","libraryTools":"Library & tools","findDownload":"Find & download","sections":"Page sections","pages":"Main pages","preferences":"Preferences","oneModelLoaded":"Only keep one model loaded","chatDefaults":"This model will start with its detected defaults. Advanced options remain available in Servers & API."},
+  "console": {
+    "chatImages": "Chat & Images",
+    "serversApi": "Servers & API",
+    "models": "Models",
+    "libraryTools": "Library & tools",
+    "findDownload": "Find & download",
+    "sections": "Page sections",
+    "pages": "Main pages",
+    "preferences": "Preferences",
+    "oneModelLoaded": "Only keep one model loaded",
+    "chatDefaults": "This model will start with its detected defaults. Advanced options remain available in Servers & API."
+  },
   "ssdPool": {
     "capacity": "SSD cache has reached its effective pool limit: {used} / {cap}. Automatic eviction may remove older reusable entries.",
     "evicted": "SSD cache reached its limit and older entries were automatically evicted. Current pool usage: {used} / {cap}.",
@@ -45,7 +56,7 @@
     "dismiss": "Dismiss",
     "language": "Language",
     "or": "or",
-    "dsv4TopPAdvisory": "DeepSeek V4 Flash: use Top P 0.95. Other values may increase looping risk. vMLX only warns and does not change this setting automatically.",
+    "dsv4TopPAdvisory": "DeepSeek V4 Flash: use Top P 0.95. Other values may increase looping risk. bellaMLX only warns and does not change this setting automatically.",
     "theme": {
       "dark": "Dark theme",
       "light": "Light theme",
@@ -66,9 +77,9 @@
   },
   "setup": {
     "initializing": "Initializing inference engine...",
-    "welcome": "Welcome to vMLX",
-    "firstTimeAuto": "First-time setup: vMLX needs to install its inference layer. Click below to install it automatically.",
-    "firstTimeManual": "First-time setup: vMLX needs to install its inference layer. Please install it manually to continue.",
+    "welcome": "Welcome to bellaMLX",
+    "firstTimeAuto": "First-time setup: bellaMLX needs to install its inference layer. Click below to install it automatically.",
+    "firstTimeManual": "First-time setup: bellaMLX needs to install its inference layer. Please install it manually to continue.",
     "installSuccess": "Inference engine installed successfully!",
     "installFailed": "Installation failed",
     "installCancelled": "Installation cancelled.",
@@ -77,7 +88,7 @@
     "cancel": "Cancel",
     "noInstallers": "No compatible package manager found (uv or pip with Python 3.10+). Install manually:",
     "installUvComment": "# Install uv first (recommended):",
-    "restartHint": "Then restart vMLX — it will complete setup automatically."
+    "restartHint": "Then restart bellaMLX — it will complete setup automatically."
   },
   "api": {
     "title": "API Reference",
@@ -209,7 +220,7 @@
     "showModelEndpoint": "Show model details",
     "ollamaEmbeddingsEndpoint": "Generate embeddings",
     "ollamaEmbedAliasEndpoint": "Generate embeddings (alias)",
-    "livenessCheckEndpoint": "Liveness check — returns \"vMLX Gateway is running\""
+    "livenessCheckEndpoint": "Liveness check — returns \"bellaMLX Gateway is running\""
   },
   "snippets": {
     "quickStart": "Quick Start"
@@ -233,7 +244,7 @@
       "hide": "Hide sidebar"
     },
     "about": {
-      "title": "About MLX Studio",
+      "title": "bellaMLX",
       "desc": "Local AI inference for Apple Silicon",
       "creator": "Created by Jinho Jang",
       "language": "Language",
@@ -252,7 +263,9 @@
       "hfRequired": "Required for downloading gated models (Flux, Llama, etc.).",
       "getToken": "Get your token",
       "savedTokenPlaceholder": "Saved token configured (enter a new token to replace)"
-    }
+    },
+    "desktopTitle": "bellaMLX / Console",
+    "desktopName": "bellaMLX"
   },
   "titlebar": {
     "showSidebar": "Show sidebar",
@@ -425,7 +438,7 @@
       "thinkingAuto": "Auto",
       "thinkingOn": "On",
       "thinkingOff": "Off",
-      "thinkingHelp": "Auto: local vMLX uses the model/runtime reasoning default. On: request thinking. Off: request direct responses.",
+      "thinkingHelp": "Auto: local bellaMLX uses the model/runtime reasoning default. On: request thinking. Off: request direct responses.",
       "thinkingNativeOnlyHelp": "This model exposes native reasoning only. Auto uses the model default; On requests reasoning. Thinking Off is unavailable.",
       "thinkingNotConfigurable": "This model's template does not read a thinking toggle — reasoning depth is set by Reasoning effort below.",
       "reasoningEffort": "Reasoning Effort",
@@ -697,7 +710,7 @@
       "diskCachePathPlaceholder": "~/.cache/vmlx-engine/prompt-cache",
       "powerManagement": "Power Management",
       "performanceGeneration": "Performance & Generation",
-      "lagunaXsTopKWarning": "Laguna XS 2.1 expects the bundle to declare Top K 20, but this model's metadata does not resolve to 20. Update generation_config.json or jang_config.json. vMLX will not override sampling automatically.",
+      "lagunaXsTopKWarning": "Laguna XS 2.1 expects the bundle to declare Top K 20, but this model's metadata does not resolve to 20. Update generation_config.json or jang_config.json. bellaMLX will not override sampling automatically.",
       "toolIntegrationMCP": "Tool Integration (MCP)",
       "mcpConfigPlaceholder": "/path/to/mcp-config.json",
       "chatTemplatePlaceholder": "Leave empty to use model default",
@@ -816,17 +829,17 @@
       "cacheTtlMinutes": "Cache TTL (minutes)",
       "cacheTtlTooltip": "Time-to-live for memory-aware cache entries. Entries not accessed within this window are evicted to free memory. 'No expiration' means entries are only evicted by memory pressure. This setting has no effect while In-Memory Paged Cache (RAM) is on; that tier uses LRU eviction based on Max Cache Blocks.",
       "noExpiration": "No expiration",
-      "cachingHelpBatchBody": "is the heart of vMLX's server performance. Unlike simple mode (which processes exactly one request at a time), continuous batching allows multiple requests to be processed simultaneously. More importantly, it is required to enable all advanced caching features (Prefix Cache, In-Memory Paged Cache, KV Quantization, and Disk Cache).",
+      "cachingHelpBatchBody": "is the heart of bellaMLX's server performance. Unlike simple mode (which processes exactly one request at a time), continuous batching allows multiple requests to be processed simultaneously. More importantly, it is required to enable all advanced caching features (Prefix Cache, In-Memory Paged Cache, KV Quantization, and Disk Cache).",
       "cachingHelpPrefixBody": "Prefix caching drastically speeds up interactions by remembering previous prompts (like a system prompt or a long document), skipping the expensive prefill phase.",
       "memoryAwareDefaultBody": "Intelligently manages the cache based on explicit memory boundaries (MB) or a percentage of total system RAM. It automatically evicts the oldest items when crossing these limits.",
       "legacyEntryCountBody": "A simpler system that just stores a fixed number of complete prompt states regardless of their size. Useful if you want strict deterministic eviction.",
       "cachingHelpMambaBody": "Newer models like Qwen 2.5/3, Falcon Mamba, and Jamba mix standard Attention (KV cache) with SSM blocks (Mamba/Arrays cache).",
-      "kvQuantizationBody": "vMLX securely isolates Mamba layers. If you turn on KV Quantization (e.g. q8), it will safely compress the Attention layers while leaving the internal Mamba/SSM memory at full precision, ensuring no corruption or quality loss.",
+      "kvQuantizationBody": "bellaMLX securely isolates Mamba layers. If you turn on KV Quantization (e.g. q8), it will safely compress the Attention layers while leaving the internal Mamba/SSM memory at full precision, ensuring no corruption or quality loss.",
       "inMemoryPagedCacheBody": "Some models use this RAM tier when Prefix Cache is enabled so attention KV blocks and path-dependent state share one cache contract. Supported models can instead use Block Disk Cache as an SSD-only tier.",
       "kvQuantHelpBody1": "By converting stored prompts to q8 or q4 precision, you can reduce the cache's RAM footprint by 2-4x.",
       "kvQuantHelpBody2": "The actual text generation continues to run at standard full precision natively in MLX.",
       "vlHelpBody": "If you repeatedly ask questions about the exact same image (like in a tool-calling flow analyzing a dashboard), the massive vision embedding prefill is cached and reused instantly.",
-      "pagedCacheHint": "Locked off for this release. vMLX persists reusable prefix and native cache blocks to SSD and restores payloads only transiently; it does not launch a retained paged-RAM mirror.",
+      "pagedCacheHint": "Locked off for this release. bellaMLX persists reusable prefix and native cache blocks to SSD and restores payloads only transiently; it does not launch a retained paged-RAM mirror.",
       "dsv4PagedNote": "DSV4 uses fixed 256-token typed composite blocks in the authoritative SSD tier. Its retained paged-RAM mirror is disabled.",
       "pagedCacheRequiresBatching": "In-Memory Paged Cache (RAM) requires continuous batching. Turn on 'Continuous Batching' in the Concurrent Processing section above to enable the RAM cache tier.",
       "pagedCacheDiskConflict": "In-Memory Paged Cache (RAM) and legacy Disk Cache cannot run simultaneously. Enabling the RAM tier will auto-disable legacy Disk Cache. For persistent SSD caching, use 'Block Disk Cache (SSD / L2)' below instead.",
@@ -977,7 +990,7 @@
       "forceOff": "Force Off",
       "dsv4TextRuntimeNote": "DSV4 Flash is served through the text runtime. Image/video controls stay hidden because this bundle has no VL processor path.",
       "vlmDisabledSmelt": "VLM is disabled when Smelt Mode is active. Smelt uses text-only loading for partial expert support.",
-      "forceTextOnlyNote": "This bundle includes media metadata, but its detected vMLX runtime is currently text-only. Attachments stay disabled until that family's native media path is live-verified; changing quantization format alone does not make the media route available.",
+      "forceTextOnlyNote": "This bundle includes media metadata, but its detected bellaMLX runtime is currently text-only. Attachments stay disabled until that family's native media path is live-verified; changing quantization format alone does not make the media route available.",
       "vlmActiveNote": "VLM mode is active — the MLLM scheduler handles image/video processing with Prefix Cache, In-Memory Paged Cache (RAM), and KV quantization support.",
       "vlmOffNote": "VLM mode is off only when the model is not auto-detected as multimodal. Detected VLM bundles launch with image/video support.",
       "omniBackend": "Omni Backend",
@@ -1036,7 +1049,7 @@
       "tensorNotImplemented": "Tensor parallelism is not yet implemented. Use pipeline parallelism for now.",
       "clusterSecret": "Cluster Secret",
       "clusterSecretTooltip": "Shared secret for authenticating worker nodes. All workers must use the same secret. Leave empty for no authentication (only safe on trusted networks).",
-      "workerNodesNote": "Worker nodes: Install vMLX on each Mac and run 'vmlx-worker --secret YOUR_SECRET' from Terminal. Workers auto-advertise via Bonjour — the coordinator discovers them automatically.",
+      "workerNodesNote": "Worker nodes: Install bellaMLX on each Mac and run 'vmlx-worker --secret YOUR_SECRET' from Terminal. Workers auto-advertise via Bonjour — the coordinator discovers them automatically.",
       "setupStep2": "2. On each worker Mac:",
       "setupStep3": "3. Workers appear automatically above via Bonjour discovery",
       "setupStep4": "4. Or click \"Add Manual\" to add by IP if discovery doesn't find them",
@@ -1059,7 +1072,7 @@
       "clearSsdCacheFailed": "Could not clear: {{error}}. The session must be running.",
       "clearSsdCacheEmpty": "Nothing to clear — this session had no cached prompts.",
       "clearSsdCachePartial": "Cleared {{count}} tier(s); {{skipped}} was left alone (still in use by a running request). Try again once the session is idle.",
-      "blockCacheArchitecturePoolNote": "One pool for everything: this budget covers every cache type vMLX writes — plain KV blocks, typed companion state (SSM/GatedDelta), native composite records (DeepSeek-V4 DSA/CSA/HCA), rotating sliding-window state, and multimodal blocks — for every model and every session. When it fills, the oldest prompts are removed first, across all of them, including models you are not using right now.",
+      "blockCacheArchitecturePoolNote": "One pool for everything: this budget covers every cache type bellaMLX writes — plain KV blocks, typed companion state (SSM/GatedDelta), native composite records (DeepSeek-V4 DSA/CSA/HCA), rotating sliding-window state, and multimodal blocks — for every model and every session. When it fills, the oldest prompts are removed first, across all of them, including models you are not using right now.",
       "videoMaxPixels": "Video Frame Pixel Budget",
       "videoMaxPixelsTooltip": "Maximum pixels per sampled video frame after resizing (aspect ratio preserved, rounded to the model's patch size). Lower = fewer vision tokens per frame = faster prefill, less spatial detail. Leave at Processor default to keep the model's own sizing. The native loader caps this at 602k.",
       "videoMaxPixelsDefault": "Processor default",
@@ -1113,7 +1126,7 @@
       "modelLabel": "Model",
       "imageServerEditHint": "The image server exposes a /v1/images/edits endpoint for editing images with prompts. Use the Image tab or any API client.",
       "imageServerGenHint": "The image server exposes a /v1/images/generations endpoint (OpenAI-compatible). Use the Image tab or any API client to generate images.",
-      "engineNotFound": "Inference engine not found. Restart vMLX to run first-time setup, or install manually:",
+      "engineNotFound": "Inference engine not found. Restart bellaMLX to run first-time setup, or install manually:",
       "creatingSession": "Creating session...",
       "sessionCreated": "Session created: {id}",
       "serverReady": "Server is ready!",
@@ -1128,7 +1141,7 @@
       "directoriesTitle": "Configure model scan directories",
       "detectProcesses": "Detect Processes",
       "newSession": "+ New Session",
-      "dirManagerDescription": "vMLX scans these directories for models when creating a new session.",
+      "dirManagerDescription": "bellaMLX scans these directories for models when creating a new session.",
       "emptyHeader": "No sessions yet",
       "emptyBody": "Create a session to load a model and start chatting, or detect a running server.",
       "createSession": "Create Session",
@@ -1657,7 +1670,8 @@
       "startTimedOut5m": "Session start timed out after 5m",
       "createFailed": "Failed to create session",
       "createdNotFound": "Session created but not found",
-      "sessionFailedToStart": "Session failed to start"
+      "sessionFailedToStart": "Session failed to start",
+      "startCancelled": "Model loading cancelled"
     },
     "drawer": {
       "restartedToast": "Restarted with new settings.",
@@ -2016,7 +2030,7 @@
   },
   "update": {
     "banner": {
-      "versionLabel": "vMLX {version}",
+      "versionLabel": "bellaMLX {version}",
       "available": "is available",
       "download": "Download",
       "starOnGitHub": "Star on GitHub",
@@ -2030,7 +2044,7 @@
   },
   "main": {
     "tray": {
-      "modelsLoaded": "vMLX — {n} model(s) loaded",
+      "modelsLoaded": "bellaMLX — {n} model(s) loaded",
       "apiGateway": "API Gateway: localhost:{port}",
       "copyApiUrl": "Copy API URL",
       "singleModelMode": "Gateway single model mode",
@@ -2045,14 +2059,14 @@
       "sleep": "Sleep",
       "noModels": "No models loaded",
       "memory": "Memory: {used} / {total} GB",
-      "openWindow": "Open vMLX Window",
-      "quit": "Quit vMLX",
-      "tooltipRunningSleeping": "vMLX — {running} running, {standby} sleeping",
-      "tooltipNoModels": "vMLX — No models loaded"
+      "openWindow": "Open bellaMLX Window",
+      "quit": "Quit bellaMLX",
+      "tooltipRunningSleeping": "bellaMLX — {running} running, {standby} sleeping",
+      "tooltipNoModels": "bellaMLX — No models loaded"
     },
     "dialog": {
       "unexpectedErrorTitle": "Unexpected Error",
-      "unexpectedErrorBody": "vMLX encountered an error:\n\n{message}\n\nThe app will now exit.",
+      "unexpectedErrorBody": "bellaMLX encountered an error:\n\n{message}\n\nThe app will now exit.",
       "dbRecoveredTitle": "Database Recovered",
       "dbRecoveredMessage": "Your chat database was corrupted and has been recreated.",
       "dbRecoveredDetail": "Your previous data has been backed up to:\n{path}",

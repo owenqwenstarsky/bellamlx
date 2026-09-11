@@ -9,7 +9,7 @@ function read(path: string): string {
 describe("secret setting presence checks", () => {
   it("exposes a non-decrypting settings.has IPC path", () => {
     const database = read("src/main/database.ts");
-    const main = read("src/main/index.ts");
+    const main = read("src/main/ipc/settings.ts");
     const preload = read("src/preload/index.ts");
 
     expect(database).toContain("hasSetting(key: string): boolean");

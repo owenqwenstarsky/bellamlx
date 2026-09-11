@@ -1011,7 +1011,7 @@ describe('KV Cache Quantization', () => {
         )
         const help = locale.chat.settings.thinkingHelp
 
-        expect(help).toContain('local vMLX')
+        expect(help).toContain('local bellaMLX')
         expect(help).toContain('model/runtime reasoning default')
         expect(help).toContain('request thinking')
         expect(help).toContain('Off')

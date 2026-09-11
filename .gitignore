@@ -373,3 +373,11 @@ trace_err*.txt
 /test_build_args.ts
 
 panel/build_dmg.sh
+
+# bellaMLX test artifacts
+panel/test-results/
+panel/playwright-report/
+
+!/THIRD_PARTY_NOTICES.txt
+!docs/DEVELOPMENT.md
+!docs/CORRECTNESS.md

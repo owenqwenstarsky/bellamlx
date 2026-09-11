@@ -59,13 +59,18 @@ export function ChatModeToolbar({ activeChatId, activeSessionId, onSessionChange
       setSessionDetail(null)
       return
     }
+    let cancelled = false
+    setSessionDetail(null)
+    setEffectiveReasoningParser(undefined)
     window.api.sessions.get(activeSessionId).then((s: SessionDetail | null) => {
+      if (cancelled) return
       setSessionDetail(s)
       if (s) {
         try {
           const cfg = s.config ? JSON.parse(s.config) : {}
           if (!s.modelPath.startsWith('remote://')) {
             window.api.models.detectConfig(s.modelPath).then((detected: any) => {
+              if (cancelled) return
               const effective = resolveEffectiveReasoningParser({
                 configuredParser: cfg.reasoningParser,
                 detectedParser: detected?.reasoningParser,
@@ -86,6 +91,7 @@ export function ChatModeToolbar({ activeChatId, activeSessionId, onSessionChange
         } catch { /* ignore */ }
       }
     }).catch((err) => console.error('Failed to load session info:', err))
+    return () => { cancelled = true }
   }, [activeSessionId])
 
   // Close model picker on outside click
@@ -102,7 +108,7 @@ export function ChatModeToolbar({ activeChatId, activeSessionId, onSessionChange
 
   // Keep session status in sync via context
   const contextSession = sessions.find(s => s.id === activeSessionId)
-  const displaySession = sessionDetail
+  const displaySession = sessionDetail && sessionDetail.id === activeSessionId && contextSession
     ? {
         ...sessionDetail,
         status: contextSession?.status ?? sessionDetail.status,

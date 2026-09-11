@@ -9,9 +9,11 @@ export function SingleModelPreference() {
   const [error, setError] = useState<string | null>(null)
   const mounted = useRef(false)
   const revision = useRef(0)
+  const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
     mounted.current = true
+    setError(null)
     const unsubscribe = window.api.gateway.onSingleModelModeChanged((status) => {
       revision.current++
       setEnabled(status.singleModelMode)
@@ -22,10 +24,10 @@ export function SingleModelPreference() {
         setEnabled(status.singleModelMode)
       }
     }).catch(err => {
-      if (mounted.current) setError(String(err))
+      if (mounted.current && revision.current === requestedRevision) setError(String(err))
     })
-    return () => { mounted.current = false; unsubscribe() }
-  }, [])
+    return () => { mounted.current = false; revision.current++; unsubscribe() }
+  }, [attempt])
 
   const change = async () => {
     if (enabled === null || pending) return
@@ -36,7 +38,7 @@ export function SingleModelPreference() {
       const status = await window.api.gateway.setSingleModelMode(!enabled)
       if (mounted.current && revision.current === requestedRevision) setEnabled(status.singleModelMode)
     } catch (err) {
-      if (mounted.current) setError(String(err))
+      if (mounted.current && revision.current === requestedRevision) setError(String(err))
     } finally {
       if (mounted.current) setPending(false)
     }
@@ -57,6 +59,7 @@ export function SingleModelPreference() {
       <p id="single-model-preference-help" className="text-xs text-muted-foreground">
         {enabled === null ? t('common.loading') : t(enabled ? 'api.singleModelModeOn' : 'api.singleModelModeOff')}
       </p>
+      {error && enabled === null && <button type="button" onClick={() => setAttempt(value => value + 1)}>{t('common.retry')}</button>}
       {error && <p role="alert" className="text-xs text-destructive break-words">{t('api.changeSingleModelFailed')}: {error}</p>}
     </section>
   )
