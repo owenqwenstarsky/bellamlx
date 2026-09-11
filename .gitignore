@@ -381,3 +381,7 @@ panel/playwright-report/
 !/THIRD_PARTY_NOTICES.txt
 !docs/DEVELOPMENT.md
 !docs/CORRECTNESS.md
+
+# Repository issue tracker and agent workflow
+!/AGENTS.md
+!/KNOWN_ISSUES.md
