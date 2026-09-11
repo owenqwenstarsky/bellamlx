@@ -43,6 +43,21 @@ The first ad-hoc loader invocation repaired alignment in the cache snapshot befo
 
 ## Screen inventory and remaining work
 
+### Updating screenshot baselines
+
+Electron screenshots are scoped to the macOS major version (`*-darwin-macos-14.png`
+for the `macos-14` CI runner, `*-darwin-macos-26.png` for macOS 26). CoreText and
+emoji rendering differ between OS releases even when the UI uses bundled fonts;
+sharing one Darwin baseline caused a 6,330-pixel mismatch on the empty chat screen.
+Pixel comparison tolerances remain at Playwright's defaults.
+
+Run `npm run test:electron` from `panel` to verify the current OS baselines. For an
+intentional visual change, build with `npm run build:ui && node tests/electron/build.mjs`,
+then run `npx playwright test screens.spec.ts --update-snapshots` on each supported
+macOS version. Review all five images and commit the updated baselines, then rerun
+without `--update-snapshots`. A new OS major version requires its own reviewed set;
+do not copy another OS's images or increase the pixel tolerance to make it pass.
+
 | Surface | Current coverage / next step |
 | --- | --- |
 | First-run setup | Real renderer smoke with controlled installation detection; installer/download execution is excluded. |
